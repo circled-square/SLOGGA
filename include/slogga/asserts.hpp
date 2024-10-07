@@ -17,9 +17,9 @@
     // Actual implementation for debug builds
     #include <source_location>
     #include "./log.hpp"
-    #define EXPECTS(x) (engine::detail::assertion(x, #x, "precondition"))
-    #define ENSURES(x) (engine::detail::assertion(x, #x, "postcondition"))
-    #define ASSERTS(x) (engine::detail::assertion(x, #x, "assertion"))
+    #define EXPECTS(x) (slogga::detail::assertion(x, #x, "precondition"))
+    #define ENSURES(x) (slogga::detail::assertion(x, #x, "postcondition"))
+    #define ASSERTS(x) (slogga::detail::assertion(x, #x, "assertion"))
 
     namespace slogga::detail {
 
