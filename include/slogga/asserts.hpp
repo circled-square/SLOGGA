@@ -28,7 +28,10 @@
             std::source_location m_sl;
             mutable std::string m_what_string_cache = std::string();
         public:
-            const char* what() const {
+            assertion_failed(const char* cond_str, const char* assertion_type, std::source_location sl) :
+                m_cond_str(cond_str), m_assertion_type(assertion_type), m_sl(std::move(sl)) {}
+
+            virtual const char* what() const noexcept override {
                 if(m_what_string_cache.empty()) {
                     m_what_string_cache =  std::format("{} check failed at function '{}' at {}:{}:{}; '{}' evaluated to false",
                         m_assertion_type, m_sl.function_name(), m_sl.file_name(), m_sl.line(), m_sl.column(), m_cond_str);
