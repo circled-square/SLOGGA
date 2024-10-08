@@ -22,13 +22,13 @@
     #define ASSERTS(x) (slogga::assertion(x, #x, "assertion"))
 
     namespace slogga {
-        class assertion_failed : std::exception {
+        class assertion_failed_exception : std::exception {
             const char* m_cond_str;
             const char* m_assertion_type;
             std::source_location m_sl;
             mutable std::string m_what_string_cache = std::string();
         public:
-            assertion_failed(const char* cond_str, const char* assertion_type, std::source_location sl) :
+            assertion_failed_exception(const char* cond_str, const char* assertion_type, std::source_location sl) :
                 m_cond_str(cond_str), m_assertion_type(assertion_type), m_sl(std::move(sl)) {}
 
             virtual const char* what() const noexcept override {
@@ -42,7 +42,7 @@
 
         inline void assertion(bool cond, const char* cond_str, const char* assertion_type, std::source_location sl = std::source_location::current()) {
             if(!cond) {
-                throw assertion_failed(cond_str, assertion_type, std::move(sl));
+                throw assertion_failed_exception(cond_str, assertion_type, std::move(sl));
             }
         }
     }
