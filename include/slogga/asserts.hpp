@@ -22,7 +22,7 @@
     #define ASSERTS(x) (slogga::assertion(x, #x, "assertion"))
 
     namespace slogga {
-        class assertion_failed_exception : std::exception {
+        class assertion_failed_exception : public std::exception {
             const char* m_cond_str;
             const char* m_assertion_type;
             std::source_location m_sl;
