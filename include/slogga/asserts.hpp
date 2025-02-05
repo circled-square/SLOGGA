@@ -3,22 +3,21 @@
 
 #include "log.hpp"
 #include <stdexcept>
+#include <source_location>
 
 // Macros are used to avoid evaluation of the condition in release builds
 #ifdef NDEBUG
     // Empty implementation for release builds
 
-    // Attribute assume allows the compiler to optimize assuming the expression will always evaluate to false.
+    // Attribute assume allows the compiler to optimize assuming the expression will always evaluate to true.
     // This should always be the case provided the code was properly tested.
     #define EXPECTS(expr) [[assume(expr)]]
     #define ENSURES(expr) [[assume(expr)]]
     #define ASSERTS(expr) [[assume(expr)]]
 #else
     // Actual implementation for debug builds
-    #include <source_location>
-    #include "./log.hpp"
-    #define EXPECTS(x) (slogga::assertion(x, #x, "precondition"))
-    #define ENSURES(x) (slogga::assertion(x, #x, "postcondition"))
+    #define EXPECTS(x) (slogga::assertion(x, #x, "precondition check"))
+    #define ENSURES(x) (slogga::assertion(x, #x, "postcondition check"))
     #define ASSERTS(x) (slogga::assertion(x, #x, "assertion"))
 
     namespace slogga {
@@ -33,7 +32,7 @@
 
             virtual const char* what() const noexcept override {
                 if(m_what_string_cache.empty()) {
-                    m_what_string_cache =  std::format("{} check failed at function '{}' at {}:{}:{}; '{}' evaluated to false",
+                    m_what_string_cache =  std::format("{} failed at function '{}' at {}:{}:{}; '{}' evaluated to false",
                         m_assertion_type, m_sl.function_name(), m_sl.file_name(), m_sl.line(), m_sl.column(), m_cond_str);
                 }
                 return m_what_string_cache.c_str();
