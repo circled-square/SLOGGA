@@ -1,7 +1,7 @@
 #ifndef SLOGGA_ASSERTS_HPP
 #define SLOGGA_ASSERTS_HPP
 
-#include "log.hpp"
+#include <format>
 #include <stdexcept>
 #include <source_location>
 
