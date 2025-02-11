@@ -5,15 +5,27 @@
 #include <stdexcept>
 #include <source_location>
 
+// Attribute assume allows the compiler to optimize assuming the expression will always evaluate to true.
+// This should always be the case provided the code was properly tested.
+#ifdef __has_cpp_attribute
+	#if __has_cpp_attribute(assume)
+		#define SLOGGA_ASSUME(x) [[assume(x)]]
+	#elif __has_cpp_attribute(gnu::assume)
+		#define SLOGGA_ASSUME(x) [[gnu::assume(x)]]
+	#else
+		#define SLOGGA_ASSUME(x) //nothing
+	#endif
+#else
+	#define SLOGGA_ASSUME(x) //nothing
+#endif
+
 // Macros are used to avoid evaluation of the condition in release builds
 #ifdef NDEBUG
     // Empty implementation for release builds
 
-    // Attribute assume allows the compiler to optimize assuming the expression will always evaluate to true.
-    // This should always be the case provided the code was properly tested.
-    #define EXPECTS(expr) [[assume(expr)]]
-    #define ENSURES(expr) [[assume(expr)]]
-    #define ASSERTS(expr) [[assume(expr)]]
+    #define EXPECTS(expr) SLOGGA_ASSUME(expr)
+    #define ENSURES(expr) SLOGGA_ASSUME(expr)
+    #define ASSERTS(expr) SLOGGA_ASSUME(expr)
 #else
     // Actual implementation for debug builds
     #define EXPECTS(x) (slogga::assertion(x, #x, "precondition check"))
