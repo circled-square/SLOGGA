@@ -32,13 +32,13 @@
     // assume does) rather than a crash/exception: instead they'd rather always pay the small 
     // price of an assertion. Besides, ideally, any UNIMPLEMENTED check is eventually removed, 
     // whereas other assertions are meant to stay indefinitely.
-    #define UNIMPLEMENTED(x) (slogga::assertion(x, #x, "this feature is unimplemented; assertion"))
+    #define UNIMPLEMENTED(x) (slogga::detail::assertion(x, #x, "this feature is unimplemented; assertion"))
 #else
     // Actual implementation for debug builds
-    #define EXPECTS(x) (slogga::assertion(x, #x, "precondition check"))
-    #define ENSURES(x) (slogga::assertion(x, #x, "postcondition check"))
-    #define ASSERTS(x) (slogga::assertion(x, #x, "assertion"))
-    #define UNIMPLEMENTED(x) (slogga::assertion(x, #x, "this feature is unimplemented; assertion"))
+    #define EXPECTS(x) (slogga::detail::assertion(x, #x, "precondition check"))
+    #define ENSURES(x) (slogga::detail::assertion(x, #x, "postcondition check"))
+    #define ASSERTS(x) (slogga::detail::assertion(x, #x, "assertion"))
+    #define UNIMPLEMENTED(x) (slogga::detail::assertion(x, #x, "this feature is unimplemented; assertion"))
 #endif
 
 namespace slogga {
@@ -61,10 +61,11 @@ namespace slogga {
     };
 
     namespace detail {
-    inline void assertion(bool cond, const char* cond_str, const char* assertion_type, std::source_location sl = std::source_location::current()) {
-        if(!cond) {
-            throw assertion_failed_exception(cond_str, assertion_type, std::move(sl));
-        }
+    	inline void assertion(bool cond, const char* cond_str, const char* assertion_type, std::source_location sl = std::source_location::current()) {
+    	    if(!cond) {
+    	        throw assertion_failed_exception(cond_str, assertion_type, std::move(sl));
+    	    }
+    	}
     }
 }
 
